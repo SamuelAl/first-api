@@ -32,6 +32,17 @@ app.get('/funions', function(request, response) {
   response.send("Yo wasup");
 });
 
+app.post('/', function(request, response) {
+  var ingredient = request.body;
+  if (!ingredient || ingredient.text === "") {
+    response.status(500).send({error: "Your ingredient must have a name"});
+  }
+  else {
+    ingredients.push(ingredient);
+    response.status(200).send(ingredients);
+  }
+})
+
 app.listen(3000, function() {
   console.log("Firts API running on port 3000!");
 });
