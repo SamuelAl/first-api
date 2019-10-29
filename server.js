@@ -24,15 +24,11 @@ var ingredients = [
   }
 ];
 
-app.get('/', function(request, response) {
+app.get('/ingredients', function(request, response) {
   response.send(ingredients);
 });
 
-app.get('/funions', function(request, response) {
-  response.send("Yo wasup");
-});
-
-app.post('/', function(request, response) {
+app.post('/ingredients', function(request, response) {
   var ingredient = request.body;
   if (!ingredient || ingredient.text === "") {
     response.status(500).send({error: "Your ingredient must have a name"});
@@ -40,6 +36,30 @@ app.post('/', function(request, response) {
   else {
     ingredients.push(ingredient);
     response.status(200).send(ingredients);
+  }
+})
+
+app.put('/ingredients/:ingredientId', function(request, response) {
+  var newText = request.body.text;
+  if (!newText || newText === "") {
+    response.status(500).send({error:"Your ingredients must have a text"});
+  }
+  else {
+    var objectFound = false;
+    for (var x = 0; x < ingredients.length; x++) {
+      var ingredient = ingredients[x];
+      if (ingredient.id === request.params.ingredientId) {
+        objectFound = true;
+        ingredients[x].text = newText;
+        break;
+      }
+    }
+    if (!objectFound) {
+      response.status(500).send({error:"ingredient id not found"})
+    }
+    else {
+      response.send(ingredients);
+    }
   }
 })
 
